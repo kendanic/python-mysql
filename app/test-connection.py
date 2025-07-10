@@ -81,7 +81,7 @@ config = {
   'user': 'ken',
   'password': 'Ken@123',
   'host': '127.0.0.1',
-  'database': kendanic,
+  'database': 'kendanic',
   'raise_on_warnings': True
 }
 
