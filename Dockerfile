@@ -2,7 +2,7 @@
 FROM python:3
 
 # To include the vulnerabilities patch packages
-RUN apk update && apk upgrade && apk add --no-cache curl
+RUN apt-get update && apt-get upgrade -y && apt-get install -y curl
 
 # Install tzdata for timezone configuration
 RUN apk add --no-cache tzdata
