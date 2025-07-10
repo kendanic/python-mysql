@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - feature/*
+      - release/*
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-latest
+    runs-on: 
+      - self-hosted 
+      - officelap
 
     steps:
       - name: Checkout Code
