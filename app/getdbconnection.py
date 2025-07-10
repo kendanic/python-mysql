@@ -15,7 +15,7 @@
 #     # Don't forget to close the connection
 #     mydb.close()
 
-from db_connection import get_connection
+from app.db_connection import get_connection
 
 # Get the database connection
 mydb = get_connection()

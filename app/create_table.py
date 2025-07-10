@@ -1,4 +1,4 @@
-from db_connection import get_connection
+from app.db_connection import get_connection
 
 # Establish a connection to the database
 mydb = get_connection()
