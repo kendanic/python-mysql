@@ -62,3 +62,4 @@ jobs:
             docker run -d --name pythonapp \
               --restart unless-stopped \
               kendanic/python-app-dev-rest-api:latest
+
