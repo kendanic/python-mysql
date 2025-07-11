@@ -1,9 +1,6 @@
 # Use the official Node.js image as a base image
 FROM python:3
 
-# To include the vulnerabilities patch packages
-RUN apt-get update && apt-get upgrade -y && apt-get install -y curl
-
 # Install tzdata for timezone configuration
 RUN apk add --no-cache tzdata
 
