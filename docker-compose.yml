@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    image: kendanic/python-app-dev-rest-api:latest
+    container_name: pythonapp-dev
+    restart: always
+    ports:
+      - "5000:5000"
+    network_mode: host
+    environment:
+      - DB_HOST=127.0.0.1
+      - DB_USER=ken
+      - DB_PASSWORD=Ken@123
+      - DB_NAME=kendanic
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./web/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
