@@ -61,7 +61,7 @@ jobs:
             docker stop pythonapp || true
             docker rm pythonapp || true
             docker pull kendanic/python-app-dev-rest-api:latest
-            docker run -d --name pythonapp --restart unless-stopped -p 5000:5000 kendanic/python-app-dev-rest-api:latest
+            docker run -d --name pythonapp --restart unless-stopped -p 5000:5000 kendanic/python-app-dev-rest-api:${{ env.COMMIT_SHORT_SHA }}
 
 
   pull-and-run-dev:
