@@ -44,7 +44,7 @@ jobs:
           build-args: |
             COMMIT_ID=${{ env.COMMIT_SHORT_SHA }}
 
-  dev-deployment:
+  deploy-latest-to-dev:
     runs-on: [self-hosted, officelap]
     needs: build-and-push
     if: github.event_name == 'push'
@@ -58,12 +58,22 @@ jobs:
           password: ${{ secrets.DEV_SERVER_PASSWD }}
           port: ${{ secrets.DEV_SERVER_PORT }}
           script: |
+            echo "Stopping existing container (if any)..."
             docker stop pythonapp || true
             docker rm pythonapp || true
-            docker pull kendanic/python-app-dev-rest-api:latest
-            docker run -d --name pythonapp --restart unless-stopped kendanic/python-app-dev-rest-api:latest
 
-  pull-request-check:
+            echo "Pulling latest image..."
+            docker pull kendanic/python-app-dev-rest-api:latest
+
+            echo "Running container on port 5000..."
+            docker run -d \
+              --name pythonapp \
+              --restart unless-stopped \
+              -p 5000:5000 \
+              kendanic/python-app-dev-rest-api:latest
+
+
+  pull-and-run-dev:
     name: PR Build Check for Develop
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
