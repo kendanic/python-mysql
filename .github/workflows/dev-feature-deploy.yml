@@ -8,10 +8,9 @@ on:
 
 
 jobs:
-  build-push-deploy:
-    runs-on:       
-      - self-hosted 
-      - officelap
+  build-and-push:
+    runs-on: [self-hosted, officelap] 
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,9 +29,10 @@ jobs:
 
       - name: Set short git commit SHA
         id: vars
-        run: echo "COMMIT_SHORT_SHA=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
+        run: |
+          echo "COMMIT_SHORT_SHA=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
 
-      - name: Build & Push Docker Image
+      - name: Build and Push to Docker Hub
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -43,13 +43,16 @@ jobs:
           build-args: |
             COMMIT_ID=${{ env.COMMIT_SHORT_SHA }}
 
+  dev-deployment:
+    runs-on: [self-hosted, officelap]
+    steps:
       - name: Deploy to Dev Server via SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEV_SERVER_HOST }}
           username: ${{ secrets.DEV_SERVER_USER }}
           password: ${{ secrets.DEV_SERVER_PASSWD }}
-          port: 22
+          port: ${{ secrets.DEV_SERVER_PORT }}
           script: |
             echo "Stopping and removing old container..."
             docker stop pythonapp || true
