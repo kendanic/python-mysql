@@ -20,4 +20,5 @@ EXPOSE 5000
 ARG COMMIT_ID
 ENV COMMIT_ID=${COMMIT_ID}
 
-CMD ["python", "/app/test-connection.py"]
+CMD ["tail", "-f", "/dev/null"]
+
