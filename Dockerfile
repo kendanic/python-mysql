@@ -20,4 +20,4 @@ EXPOSE 5000
 ARG COMMIT_ID
 ENV COMMIT_ID=${COMMIT_ID}
 
-CMD ["python", "test-connection.py"]
+CMD ["python", "/app/test-connection.py"]
