@@ -6,10 +6,9 @@ on:
       - feature/*
       - release/*
 
-
 jobs:
   build-and-push:
-    runs-on: [self-hosted, officelap] 
+    runs-on: [self-hosted, officelap]
 
     steps:
       - name: Checkout code
@@ -29,8 +28,7 @@ jobs:
 
       - name: Set short git commit SHA
         id: vars
-        run: |
-          echo "COMMIT_SHORT_SHA=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
+        run: echo "COMMIT_SHORT_SHA=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
 
       - name: Build and Push to Docker Hub
         uses: docker/build-push-action@v6
@@ -44,7 +42,9 @@ jobs:
             COMMIT_ID=${{ env.COMMIT_SHORT_SHA }}
 
   dev-deployment:
+    needs: build-and-push
     runs-on: [self-hosted, officelap]
+
     steps:
       - name: Deploy to Dev Server via SSH
         uses: appleboy/ssh-action@master
@@ -54,15 +54,11 @@ jobs:
           password: ${{ secrets.DEV_SERVER_PASSWD }}
           port: ${{ secrets.DEV_SERVER_PORT }}
           script: |
-            echo "Stopping and removing old container..."
-            docker stop pythonapp || true
-            docker rm pythonapp || true
+            echo "Stopping old container..."
+            docker compose -f /home/ken/dev/docker-compose.yml down || true
 
-            echo "Pulling new image from Docker Hub..."
+            echo "Pulling latest image from Docker Hub..."
             docker pull kendanic/python-app-dev-rest-api:latest
 
-            echo "Running new container..."
-            docker run -d --name pythonapp \
-              --restart unless-stopped \
-              kendanic/python-app-dev-rest-api:latest
-
+            echo "Starting app with new container..."
+            docker compose -f /home/ken/dev/docker-compose.yml up -d

@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    image: kendanic/python-app-dev-rest-api:latest
     container_name: pythonapp-dev
     restart: always
     ports:
       - "5000:5000"
-    network_mode: host  # <--- This gives access to localhost
+    network_mode: host
     environment:
       - DB_HOST=127.0.0.1
       - DB_USER=ken
